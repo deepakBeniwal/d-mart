@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int                   @id @default(autoincrement())
+  email             String                @unique
+  name              String
+  phone_number      String
+  address           String
+  gender            String
+  cart              Cart? // User can have one cart
+  cognitoSub        String                @unique
+  purchaseHistories UserPurchaseHistory[]
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[] @relation("ProductsInCategory")
+}
+
+model Product {
+  id                Int                            @id @default(autoincrement())
+  name              String
+  description       String?
+  price             Float
+  imageUrl          String?
+  createdAt         DateTime                       @default(now())
+  updatedAt         DateTime                       @default(now()) @updatedAt
+  categoryId        Int? // Foreign key to Category
+  category          Category?                      @relation("ProductsInCategory", fields: [categoryId], references: [id])
+  carts             CartItem[]
+  purchaseHistories UserProductInPurchaseHistory[]
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  userId    Int        @unique
+  user      User       @relation(fields: [userId], references: [id])
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  products  CartItem[] // A shopping cart can have multiple products
+}
+
+model CartItem {
+  id        Int      @id @unique @default(autoincrement())
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+  cartId    Int // Foreign key to shopping cart
+  cart      Cart     @relation(fields: [cartId], references: [id])
+  userId    Int // Add userId to the ProductInCart model
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserPurchaseHistory {
+  id         Int                            @id @default(autoincrement())
+  userId     Int
+  user       User                           @relation(fields: [userId], references: [id])
+  products   UserProductInPurchaseHistory[]
+  totalItems Int
+  totalPrice Float
+  createdAt  DateTime                       @default(now())
+  updatedAt  DateTime                       @updatedAt
+}
+
+model UserProductInPurchaseHistory {
+  id                Int                 @id @unique @default(autoincrement())
+  productId         Int
+  product           Product             @relation(fields: [productId], references: [id])
+  purchaseHistoryId Int
+  purchaseHistory   UserPurchaseHistory @relation(fields: [purchaseHistoryId], references: [id])
+  quantity          Int
+  price             Float
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  @@unique([productId, purchaseHistoryId])
+}

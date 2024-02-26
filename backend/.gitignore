@@ -1,0 +1,47 @@
+# Node.js
+node_modules/
+
+# TypeScript
+*.tsbuildinfo
+dist/
+
+#Prisma
+prisma/migrations/
+
+#TestCase
+coverage/
+
+# Visual Studio Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment variables
+.env
+
+# IDE settings
+.idea/
+
+# Dependency directories
+/jspm_packages/
+/bower_components/
+
+# Package files
+package-lock.json
+yarn.lock
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk

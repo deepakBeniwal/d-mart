@@ -1,0 +1,185 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "API Documentation"
+paths:
+  /register:
+    post:
+      summary: "Register a new user"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+              name:
+                type: "string"
+              phone_number:
+                type: "string"
+              address:
+                type: "string"
+              gender:
+                type: "string"
+              cognitoSub:
+                type: "string"
+  /login:
+    post:
+      summary: "Login a user"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+              password:
+                type: "string"
+  /confirm:
+    post:
+      summary: "Confirm user registration"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              confirmationCode:
+                type: "string"
+              username:
+                type: "string"
+  /delete:
+    post:
+      summary: "Delete user account"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              userId:
+                type: "integer"
+  /add-to-cart:
+    post:
+      summary: "Add a product to the cart"
+      security:
+        - AccessToken: []
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              productId:
+                type: "integer"
+              quantity:
+                type: "integer"
+  /view-cart:
+    get:
+      summary: "View the contents of the cart"
+      security:
+        - AccessToken: []
+  /update-cart/{productId}:
+    put:
+      summary: "Update the quantity of a product in the cart"
+      parameters:
+        - name: "productId"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              quantity:
+                type: "integer"
+      security:
+        - AccessToken: []
+  /remove-from-cart/{productId}:
+    delete:
+      summary: "Remove a product from the cart"
+      parameters:
+        - name: "productId"
+          in: "path"
+          required: true
+          type: "string"
+      security:
+        - AccessToken: []
+  /checkout:
+    post:
+      summary: "Proceed to checkout"
+      security:
+        - AccessToken: []
+  /purchase-history:
+    get:
+      summary: "Get user's purchase history"
+      security:
+        - AccessToken: []
+  /purchase-history/{id}:
+    get:
+      summary: "Get purchase details by ID"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "string"
+      security:
+        - AccessToken: []
+  /products/add:
+    post:
+      summary: "Add a new product"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              name:
+                type: "string"
+              description:
+                type: "string"
+              price:
+                type: "number"
+              imageUrl:
+                type: "string"
+              categoryId:
+                type: "integer"
+  /products/all:
+    get:
+      summary: "Get all products"
+      security:
+        - AccessToken: []
+  /products/byCategory/{categoryId}:
+    get:
+      summary: "Get products by category"
+      parameters:
+        - name: "categoryId"
+          in: "path"
+          required: true
+          type: "string"
+  /products/{id}:
+    get:
+      summary: "Get product by ID"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "string"
+  /categories:
+    get:
+      summary: "Get all product categories"
+securityDefinitions:
+  AccessToken:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
